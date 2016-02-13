@@ -14,6 +14,8 @@
 <c:set var="jsIncludes">
     <link rel="stylesheet" href="/stylesheets/datepicker.css" type="text/css" media="screen">
     
+    <script type="text/javascript" src="/js/lib/moment.min.js"></script>
+    <script type="text/javascript" src="/js/lib/moment-timezone-with-data-2010-2020.min.js"></script>
     <script type="text/javascript" src="/js/datepicker.js"></script>
     <script type="text/javascript" src="/js/instructor.js"></script>
     <script type="text/javascript" src="/js/instructorFeedbacks.js"></script>

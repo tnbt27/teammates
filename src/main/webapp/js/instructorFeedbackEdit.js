@@ -3,6 +3,7 @@ $(document).ready(function() {
     bindUncommonSettingsEvents();
     updateUncommonSettingsInfo();
     hideUncommonPanels();
+    prepareTimeZoneInputs();
 });
 
 /**

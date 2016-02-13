@@ -64,7 +64,8 @@
                             <div class="col-sm-10 col-md-8">
                                 <select class="form-control"
                                     name="<%= Const.ParamsNames.FEEDBACK_SESSION_TIMEZONE %>"
-                                    id="<%= Const.ParamsNames.FEEDBACK_SESSION_TIMEZONE %>">
+                                    id="<%= Const.ParamsNames.FEEDBACK_SESSION_TIMEZONE %>"
+                                    onchange="updateDST()">
                                     <c:forEach items="${fsForm.timezoneSelectField}" var="option">
                                         <option ${option.attributesToString}>
                                             ${option.content}
@@ -73,6 +74,11 @@
                                     
                                 </select>
                             </div>
+                            <%-- <div class="col-sm-8" style="margin-top: 5px;" id="dstDetectedAlert">
+                                <div class="text-color-gray">
+                                    Daylight Savings Time detected!
+                                </div>
+                            </div> --%>
                         </div>
                     </div>
                 </div>

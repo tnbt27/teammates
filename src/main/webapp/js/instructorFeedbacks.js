@@ -81,11 +81,10 @@ function selectDefaultTimeOptions() {
 
     var hours = convertDateToHHMM(now).substring(0, 2);
     var currentTime = (parseInt(hours) + 1) % 24;
-    var timeZone = -now.getTimezoneOffset() / 60;
 
     if (!isTimeZoneIntialized()) {
         $('#' + FEEDBACK_SESSION_STARTTIME).val(currentTime);
-        $('#' + FEEDBACK_SESSION_TIMEZONE).val(timeZone);
+        $('#' + FEEDBACK_SESSION_TIMEZONE).val(getNonDSTOffset(moment.tz.guess()));
     }
 
     var uninitializedTimeZone = $('#timezone > option[value=\'' + TIMEZONE_SELECT_UNINITIALISED + '\']');
@@ -94,11 +93,56 @@ function selectDefaultTimeOptions() {
     }
 }
 
+/**
+ * Compute the UTC Offset under non Daylight Savings conditions.
+ *
+ * Works by first checking if current time is subject to dst.
+ * If yes, finds the time of next transition to non DST for the
+ * timezone and finds UTC offset at that timestamp
+ *
+ * @param tz, must be a timezone ID compatible with Moments-Timezone library
+ *        Example: "Asia/Singapore"
+ */
+function getNonDSTOffset(tz) {
+    var now = moment.tz(moment(), tz);
+    if (!now.isDST()) {
+        return now.utcOffset() / 60;
+    } else {
+        var zone = moment.tz.zone(tz);
+        var dstOffTimestamp = zone.untils.filter(function(v) {
+            return v > now.format('x');
+        })[0];
+        return moment.tz(dstOffTimestamp, tz).utcOffset() / 60;
+    }
+}
+
+/**
+ * Binds timezone IDs compatible with Moment-Timezone library to the
+ * corresponding <option> elements
+ */
+function prepareTimeZoneInputs() {
+    var offsets = {};
+    $.each(moment.tz.names(), function(idx, name) {
+        var offset = getNonDSTOffset(name);
+        if (offset in offsets) {
+            offsets[offset].push(name);
+        } else {
+            offsets[offset] = [name];
+        }
+    });
+    $.each(offsets, function(offset, zones) {
+        $('#timezone > option[value=\'' + offset + '\']').attr('data-tz', JSON.stringify(zones));
+    });
+}
 
 function isTimeZoneIntialized() {
     return $('#timezone').val() !== TIMEZONE_SELECT_UNINITIALISED;
 }
 
+function updateDST() {
+    var zones = JSON.parse($('#timezone > option:selected').attr('data-tz'));
+    console.log(zones);
+}
 
 /**
  * Format a number to be two digits
@@ -216,6 +260,7 @@ function readyFeedbackPage() {
     formatResponsesVisibilityGroup();
     collapseIfPrivateSession();
 
+    prepareTimeZoneInputs();
     selectDefaultTimeOptions();
     loadSessionsByAjax();
     bindUncommonSettingsEvents();
