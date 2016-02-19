@@ -122,7 +122,7 @@ function getNonDSTOffset(tz) {
  */
 function prepareTimeZoneInputs() {
     var offsets = {};
-    $.each(moment.tz.names(), function(idx, name) {
+    $.each(cleanUpTZNames(moment.tz.names()), function(idx, name) {
         var offset = getNonDSTOffset(name);
         if (offset in offsets) {
             offsets[offset].push(name);
@@ -131,7 +131,21 @@ function prepareTimeZoneInputs() {
         }
     });
     $.each(offsets, function(offset, zones) {
-        $('#timezone > option[value=\'' + offset + '\']').attr('data-tz', JSON.stringify(zones));
+        var option = $('#timezone > option[value=\'' + offset + '\']');
+        option.attr('data-tz', JSON.stringify(zones));
+        var dstZones = zones.filter(function(z) {
+            return isDSTTimeZone(z);
+        });
+        option.attr('data-dstzones', JSON.stringify(dstZones));
+    });
+    $('#localeInput').hide();
+    $("#localeOkIcon").hide();
+    $("#localeErrorIcon").hide();
+}
+
+function cleanUpTZNames(names) {
+    return names.filter(function(name) {
+        return name.indexOf("Antarctica") === -1;
     });
 }
 
@@ -139,9 +153,24 @@ function isTimeZoneIntialized() {
     return $('#timezone').val() !== TIMEZONE_SELECT_UNINITIALISED;
 }
 
-function updateDST() {
-    var zones = JSON.parse($('#timezone > option:selected').attr('data-tz'));
-    console.log(zones);
+/**
+ * Detects if a given timezone follows DST or not
+ *
+ * Works by checking if there is a future date
+ * when clocks are supposed to be adjusted, according
+ * to IANA data.
+ */
+function isDSTTimeZone(tz) {
+    var zone = moment.tz.zone(tz);
+    var dstChangeTimestamp = zone.untils.filter(function(v) {
+        return v > moment().format('x');
+    })[0];
+    // For zones that used DST in the past.
+    if (dstChangeTimestamp === Infinity) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 /**
