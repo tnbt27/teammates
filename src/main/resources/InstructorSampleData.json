@@ -120,7 +120,8 @@
   "courses": {
     "Demo Course": {
       "id": "demo.course",
-      "name": "Sample Course 101"
+      "name": "Sample Course 101",
+      "timeZone": "UTC"
     }
   },  
   
