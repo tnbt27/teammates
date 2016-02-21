@@ -143,7 +143,7 @@ public class StudentsLogicTest extends BaseComponentTestCase{
                 new AccountAttributes(instructorId, "ICET Instr Name", true,
                         "instructor@icet.tmt", "TEAMMATES Test Institute 1",
                         new StudentProfileAttributes(instructorId, "ICET", "", "", "", "other", "", "")));
-        coursesLogic.createCourseAndInstructor(instructorId, instructorCourse, "Course for Enroll Testing");
+        coursesLogic.createCourseAndInstructor(instructorId, instructorCourse, "Course for Enroll Testing", "UTC");
 
         ______TS("add student into empty course");
 
@@ -459,7 +459,7 @@ public class StudentsLogicTest extends BaseComponentTestCase{
         String info;
         String enrollLines;
         String courseId = "CourseID";
-        coursesLogic.createCourse(courseId, "CourseName");
+        coursesLogic.createCourse(courseId, "CourseName", "UTC");
         
         List<String> invalidInfo;
         List<String> expectedInvalidInfo = new ArrayList<String>();
@@ -615,7 +615,7 @@ public class StudentsLogicTest extends BaseComponentTestCase{
                 new StudentProfileAttributes(instructorId, "Ins1", "", "", "", "male", "", ""));
         
         accountsLogic.createAccount(accountToAdd);
-        coursesLogic.createCourseAndInstructor(instructorId, courseIdForEnrollTest, "Course for Enroll Testing");
+        coursesLogic.createCourseAndInstructor(instructorId, courseIdForEnrollTest, "Course for Enroll Testing", "UTC");
         FeedbackSessionsLogic fsLogic = FeedbackSessionsLogic.inst();
         FeedbackSessionAttributes fsAttr = new FeedbackSessionAttributes("newFeedbackSessionName",
                 courseIdForEnrollTest, instructorEmail, new Text("default instructions"),
@@ -706,7 +706,7 @@ public class StudentsLogicTest extends BaseComponentTestCase{
                 "Instructor 1", true, "instructor@email.tmt", "TEAMMATES Test Institute 1",
                 new StudentProfileAttributes("tes.instructor", "Ins 1", "", "", "", "male", "", ""));
         accountsLogic.createAccount(accountToAdd);
-        coursesLogic.createCourseAndInstructor("tes.instructor", "tes.course", "TES Course");
+        coursesLogic.createCourseAndInstructor("tes.instructor", "tes.course", "TES Course", "UTC");
             
         String line = headerLine + EOL + "t8|n8|e8@g|c1" ;
         enrollResults = studentsLogic.enrollStudentsWithoutDocument(line, "tes.course");
