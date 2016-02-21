@@ -8,7 +8,7 @@
 
     <script type="text/javascript" src="/js/lib/moment.min.js"></script>
     <script type="text/javascript" src="/js/lib/moment-timezone-with-data-2010-2020.min.js"></script>
-    <script type="text/javascript" src="/js/lib/selectize.js"></script>
+    <script type="text/javascript" src="/js/lib/selectize.min.js"></script>
     <script type="text/javascript" src="/js/instructor.js"></script>
     <script type="text/javascript" src="/js/instructorCoursesStatsAjax.js"></script>
     <script type="text/javascript" src="/js/instructorCoursesAjax.js"></script>
